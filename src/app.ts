@@ -6,7 +6,7 @@ import session from 'express-session';
 
 import express, { Application } from 'express';
 import loadErrorHandlers from '@middlewares/error-handler';
-import router from 'routes';
+import router from './routes';
 
 const app: Application = express();
 
@@ -23,6 +23,7 @@ app.use(
     cookie: { maxAge: 30000, secure: true, httpOnly: true, sameSite: 'strict' }, // 30 seconds
     saveUninitialized: false,
     secret: 'some secret',
+    resave: false,
   })
 );
 

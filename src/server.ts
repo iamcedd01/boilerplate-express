@@ -1,6 +1,6 @@
 import app from './app';
-import { APP_PORT } from 'config/secrets';
-import logger from 'helpers/logger';
+import { APP_PORT } from '@config/secrets';
+import logger from '@helpers/logger';
 
 process.once('SIGUSR2', () => {
   process.kill(process.pid, 'SIGUSR2');
