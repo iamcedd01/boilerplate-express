@@ -1,12 +1,14 @@
 import compression from 'compression';
 import cors from 'cors';
+import session from 'express-session';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import session from 'express-session';
 
-import express, { Application } from 'express';
 import loadErrorHandlers from '@middlewares/error-handler';
+import express, { Application } from 'express';
 import router from './routes';
+
+import '@config/database';
 
 const app: Application = express();
 
