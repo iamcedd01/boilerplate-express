@@ -1,15 +1,15 @@
-import { IS_PRODUCTION, LOG_DIRECTORY } from '@config/secrets';
+import secrets from '@config/secrets';
 import * as fs from 'fs';
 import * as winston from 'winston';
 import DailyRotateFile, { DailyRotateFileTransportOptions } from 'winston-daily-rotate-file';
 
-const dir: string = LOG_DIRECTORY;
+const dir: string = secrets.logDirectory;
 
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir);
 }
 
-const logLevel = IS_PRODUCTION ? 'warn' : 'debug';
+const logLevel = secrets.isProduction ? 'warn' : 'debug';
 
 const options: DailyRotateFileTransportOptions = {
   level: logLevel,

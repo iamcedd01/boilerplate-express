@@ -1,6 +1,6 @@
-import app from './app';
-import { APP_PORT } from '@config/secrets';
+import secrets from '@config/secrets';
 import logger from '@helpers/logger';
+import app from './app';
 
 process.once('SIGUSR2', () => {
   process.kill(process.pid, 'SIGUSR2');
@@ -11,8 +11,8 @@ process.on('SIGINT', () => {
 });
 
 app
-  .listen(APP_PORT, () => {
-    logger.info(`Server running on port: ${APP_PORT}`);
-    console.log(`Server running on port: ${APP_PORT}`);
+  .listen(secrets.port, () => {
+    logger.info(`Server running on port: ${secrets.port}`);
+    console.log(`Server running on port: ${secrets.port}`);
   })
   .on('error', (e) => logger.error(e));

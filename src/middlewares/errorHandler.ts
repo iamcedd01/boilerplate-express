@@ -1,21 +1,16 @@
+/* eslint-disable quotes */
+import AppError, { HttpCode } from '@helpers/appError';
 import logger from '@helpers/logger';
-import { IS_PRODUCTION } from '@config/secrets';
 
 import { Application, NextFunction, Request, Response } from 'express';
 
 function loadErrorHandlers(app: Application) {
   app.use((_req: Request, _res: Response, next: NextFunction) => {
-    interface BetterError extends Error {
-      status?: number;
-    }
-
-    const err: BetterError = new Error('Not Found');
-    err.status = 404;
-    next(err);
+    next(new AppError({ description: 'Not Found', httpCode: HttpCode.NOT_FOUND }));
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  app.use((error: any, _req: Request, res: Response) => {
+  app.use((error: Error | AppError | any, _req: Request, res: Response, _next: NextFunction) => {
     if (error.name === 'ValidationError') {
       return res.status(422).json({
         errors: Object.keys(error.errors).reduce(
@@ -25,12 +20,19 @@ function loadErrorHandlers(app: Application) {
       });
     }
 
+    let customErr = error;
+
+    if (!(error instanceof AppError)) {
+      customErr = new AppError({
+        description: "An error has occured and we're working to fix the problem! We'll be up and running shortly.",
+        httpCode: 500,
+      });
+    }
+
     logger.error(error);
-    res.status(error.status || 500);
-    res.json({
+    res.status((customErr as AppError).httpCode).json({
       errors: {
-        message: error.message,
-        error: !IS_PRODUCTION ? error : {},
+        message: customErr.message,
       },
     });
   });

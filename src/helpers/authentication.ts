@@ -1,6 +1,6 @@
+import secrets from '@config/secrets';
 import { Request } from 'express';
 import { expressjwt as jwt } from 'express-jwt';
-import { JWT_SECRET } from '@config/secrets';
 
 function splitToken(authString: string) {
   return authString.split(' ')[0] === 'Token' ? authString.split(' ')[1] : undefined;
@@ -18,7 +18,7 @@ const authentication = {
       credentialsRequired: false,
       getToken: getTokenFromHeader,
       requestProperty: 'payload',
-      secret: JWT_SECRET,
+      secret: secrets.sessionSecret,
     }),
   ],
   required: [
@@ -27,7 +27,7 @@ const authentication = {
       credentialsRequired: true,
       getToken: getTokenFromHeader,
       requestProperty: 'payload',
-      secret: JWT_SECRET,
+      secret: secrets.sessionSecret,
     }),
   ],
 };

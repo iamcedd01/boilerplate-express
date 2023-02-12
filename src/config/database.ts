@@ -1,10 +1,12 @@
 import logger from '@helpers/logger';
 import mongoose, { ConnectOptions } from 'mongoose';
-import { DB, IS_PRODUCTION } from './secrets';
+import secrets from './secrets';
+
+const { host, name, password, port, user } = secrets.db;
 
 // Build the connection string
-const dbURI = IS_PRODUCTION
-  ? `mongodb://${DB.USER}:${encodeURIComponent(DB.PASSWORD)}@${DB.HOST}:${DB.PORT}/${DB.NAME}`
+const dbURI = secrets.isProduction
+  ? `mongodb://${user}:${encodeURIComponent(password)}@${host}:${port}/${name}`
   : 'mongodb://localhost:27017';
 
 const options: ConnectOptions = {

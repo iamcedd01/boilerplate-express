@@ -1,8 +1,9 @@
+import deserializeUser from '@middlewares/deserializeUser';
 import { NextFunction, Request, Response, Router } from 'express';
 
 const router = Router();
 
-router.get('/', (req: Request, res: Response, next: NextFunction) => {
+router.get('/', deserializeUser, (req: Request, res: Response, next: NextFunction) => {
   res.send('Hello There!');
 });
 

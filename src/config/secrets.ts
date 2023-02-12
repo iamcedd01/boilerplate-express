@@ -1,19 +1,28 @@
-import * as path from 'path';
 import * as dotenv from 'dotenv';
+import * as path from 'path';
 
 dotenv.config({ path: '.env' });
 
-export const APP_NAME = process.env.APP_NAME ?? 'boilerplate-express';
-export const APP_PORT = process.env.APP_PORT ?? 5001;
-export const ENVIRONMENT = process.env.ENVIRONMENT ?? 'development';
-export const IS_PRODUCTION = ENVIRONMENT === 'production';
-export const LOG_DIRECTORY = process.env.LOG_DIRECTORY ?? path.resolve('logs');
-export const JWT_SECRET = process.env.JWT_SECRET ?? APP_NAME;
-export const SESSION_SECRET = process.env.SESSION_SECRET ?? APP_NAME;
-export const DB = {
-  USER: process.env.DB_USER ?? 'root',
-  NAME: process.env.DB_NAME ?? 'boilerplate_express',
-  HOST: process.env.DB_HOST ?? 'localhost',
-  PASSWORD: process.env.DB_PASSWORD ?? 'secret',
-  PORT: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 27017,
+const appName = process.env.APP_NAME ?? 'boilerplate-express';
+
+const secrets = {
+  name: appName,
+  port: process.env.APP_PORT ?? 5001,
+  env: process.env.ENVIRONMENT ?? 'development',
+  isProduction: process.env.ENVIRONMENT === 'production',
+  logDirectory: process.env.LOG_DIRECTORY ?? path.resolve('logs'),
+  db: {
+    user: process.env.DB_USER ?? 'root',
+    name: process.env.DB_NAME ?? 'boilerplate_express',
+    host: process.env.DB_HOST ?? 'localhost',
+    password: process.env.DB_PASSWORD ?? 'secret',
+    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 27017,
+  },
+  accessTokenPrivateKey: process.env.ACCESS_TOKEN_PRIVATE_KEY ?? '',
+  accessTokenPublicKey: process.env.ACCESS_TOKEN_PUBLIC_KEY ?? '',
+  refreshTokenPrivateKey: process.env.REFRESH_TOKEN_PRIVATE_KEY ?? '',
+  refreshTokenPublicKey: process.env.REFRESH_TOKEN_PUBLIC_KEY ?? '',
+  sessionSecret: process.env.SESSION_SECRET ?? appName,
 };
+
+export default secrets;
