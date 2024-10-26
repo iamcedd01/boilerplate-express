@@ -24,6 +24,7 @@
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/semi": ["error", "always"],
     "@typescript-eslint/space-before-function-paren": "off",
-    "@typescript-eslint/strict-boolean-expressions": "off"
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/no-misused-promises": "off"
   }
 }

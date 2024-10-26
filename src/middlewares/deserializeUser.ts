@@ -12,15 +12,13 @@ const deserializeUser = async (req: Request, _res: Response, next: NextFunction)
       accessToken = req.cookies.access_token;
     }
 
-    console.log({ headers: req.headers, cookies: req.cookies });
-
     if (!accessToken) {
       next(new AppError({ description: 'You are not logged in', httpCode: HttpCode.UNAUTHORIZED }));
       return;
     }
 
     // Validate access token
-    const decoded = verifyJwt<{ sub: string }>(accessToken, 'accessToken');
+    const decoded = verifyJwt<{ user: string }>(accessToken, 'accessToken');
 
     if (!decoded) {
       // eslint-disable-next-line quotes

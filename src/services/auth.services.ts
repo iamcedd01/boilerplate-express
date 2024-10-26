@@ -6,12 +6,12 @@ import { IAuthLogin, IAuthRegister } from 'interface/auth';
 
 export const signToken = (user: IUserModel) => {
   // Sign the access token
-  const accessToken = signJwt({ sub: user._id }, 'accessToken', {
+  const accessToken = signJwt({ user: user._id }, 'accessToken', {
     expiresIn: `${config.accessTokenExpiresIn}m`,
   });
 
   // Sign the refresh token
-  const refreshToken = signJwt({ sub: user.id }, 'refreshToken', {
+  const refreshToken = signJwt({ user: user.id }, 'refreshToken', {
     expiresIn: `${config.refreshTokenExpiresIn}m`,
   });
 
@@ -36,5 +36,19 @@ export const handleLogin = async (body: IAuthLogin) => {
     }
 
     return signToken(user);
+  });
+};
+
+export const handleRefreshToken = async (userId?: string) => {
+  const user = await User.findById(userId);
+  console.log({ userId });
+
+  if (!user) {
+    // eslint-disable-next-line quotes
+    throw new AppError({ description: "Invalid token or user doesn't exist", httpCode: HttpCode.UNAUTHORIZED });
+  }
+
+  return signJwt({ userId: user._id }, 'accessToken', {
+    expiresIn: `${config.accessTokenExpiresIn}m`,
   });
 };

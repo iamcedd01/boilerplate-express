@@ -3,6 +3,8 @@ import { NextFunction, Request, Response, Router } from 'express';
 
 const router = Router();
 
+// router.use(deserializeUser);
+
 router.get('/', deserializeUser, (req: Request, res: Response, next: NextFunction) => {
   res.send('Hello There!');
 });

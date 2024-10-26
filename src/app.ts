@@ -1,4 +1,5 @@
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import session from 'express-session';
 import helmet from 'helmet';
@@ -33,6 +34,8 @@ app.use(
     resave: false,
   })
 );
+
+app.use(cookieParser());
 
 app.use('/api', router);
 loadErrorHandlers(app);
