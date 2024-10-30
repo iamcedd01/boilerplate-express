@@ -39,9 +39,19 @@ export const handleLogin = async (body: IAuthLogin) => {
   });
 };
 
+export const handleVerifyToken = async (userId?: string) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    // eslint-disable-next-line quotes
+    throw new AppError({ description: "Invalid token or user doesn't exist", httpCode: HttpCode.UNAUTHORIZED });
+  }
+
+  return true;
+};
+
 export const handleRefreshToken = async (userId?: string) => {
   const user = await User.findById(userId);
-  console.log({ userId });
 
   if (!user) {
     // eslint-disable-next-line quotes

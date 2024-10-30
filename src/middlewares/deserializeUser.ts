@@ -13,7 +13,8 @@ const deserializeUser = async (req: Request, _res: Response, next: NextFunction)
     }
 
     if (!accessToken) {
-      next(new AppError({ description: 'You are not logged in', httpCode: HttpCode.UNAUTHORIZED }));
+      // eslint-disable-next-line quotes
+      next(new AppError({ description: "Invalid token or user doesn't exist", httpCode: HttpCode.UNAUTHORIZED }));
       return;
     }
 

@@ -15,7 +15,13 @@ import secrets from '@config/secrets';
 
 const app: Application = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+    methods: ['GET', 'POST', 'HEAD', 'PUT', 'PATCH', 'DELETE'],
+  })
+);
 app.use(helmet());
 app.use(compression());
 if (secrets.env === 'development') {

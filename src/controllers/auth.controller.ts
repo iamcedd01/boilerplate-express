@@ -2,10 +2,10 @@
 import config from '@config/index';
 import AppError, { HttpCode } from '@helpers/appError';
 import { verifyJwt } from '@helpers/jwt';
-import { loginAccountLimiter, registerAccountLimiter } from '@middlewares/limiters';
+import { registerAccountLimiter } from '@middlewares/limiters';
 import validator from '@middlewares/validators';
 import { createUserSchema, loginSchema } from '@middlewares/validators/auth.schema';
-import { handleLogin, handleRefreshToken, handleRegister } from '@services/auth.services';
+import { handleLogin, handleRefreshToken, handleRegister, handleVerifyToken } from '@services/auth.services';
 import { CookieOptions, NextFunction, Request, Response, Router } from 'express';
 import { IAuthLogin, IAuthRegister } from 'interface/auth';
 
@@ -43,25 +43,28 @@ router.post(
   }
 );
 
-router.post(
-  '/login',
-  loginAccountLimiter,
-  loginSchema,
-  validator,
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { accessToken, refreshToken } = await handleLogin(req.body as IAuthLogin);
+router.post('/login', loginSchema, validator, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { accessToken, refreshToken } = await handleLogin(req.body as IAuthLogin);
 
-      // res.cookie('access_token', accessToken, accessTokenCookieOptions);
-      res.cookie('refresh_token', refreshToken, refreshTokenCookieOptions);
-      res.cookie('logged_in', true, { ...accessTokenCookieOptions, httpOnly: false });
+    // res.cookie('access_token', accessToken, accessTokenCookieOptions);
+    res.cookie('refresh_token', refreshToken, refreshTokenCookieOptions);
+    res.cookie('logged_in', true, { ...accessTokenCookieOptions, httpOnly: false });
 
-      return res.status(200).json({ access_token: accessToken });
-    } catch (err) {
-      next(err);
-    }
+    return res.status(200).json({ access_token: accessToken });
+  } catch (err) {
+    next(err);
   }
-);
+});
+
+router.post('/verify-token', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const isValid = await handleVerifyToken(verifyJwt<{ user: string }>(req.body.access_token, 'accessToken')?.user);
+    return res.status(200).json({ is_valid: isValid });
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.get('/refresh', async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -71,8 +74,6 @@ router.get('/refresh', async (req: Request, res: Response, next: NextFunction) =
       // eslint-disable-next-line quotes
       next(new AppError({ description: "Invalid token or user doesn't exist", httpCode: HttpCode.UNAUTHORIZED }));
     }
-
-    console.log(verifyJwt<{ user: string }>(cookies.refresh_token, 'refreshToken'));
 
     const accessToken = await handleRefreshToken(
       verifyJwt<{ user: string }>(cookies.refresh_token, 'refreshToken')?.user
