@@ -1,8 +1,8 @@
 import config from '@config/index';
 import AppError, { HttpCode } from '@helpers/appError';
 import { signJwt } from '@helpers/jwt';
+import { IAuthLogin, IAuthRegister } from '@interfaces/IAuth';
 import User, { IUserModel } from '@models/user.model';
-import { IAuthLogin, IAuthRegister } from 'interface/auth';
 
 export const signToken = (user: IUserModel) => {
   // Sign the access token

@@ -2,12 +2,12 @@
 import config from '@config/index';
 import AppError, { HttpCode } from '@helpers/appError';
 import { verifyJwt } from '@helpers/jwt';
+import { IAuthLogin, IAuthRegister } from '@interfaces/IAuth';
 import { registerAccountLimiter } from '@middlewares/limiters';
 import validator from '@middlewares/validators';
 import { createUserSchema, loginSchema } from '@middlewares/validators/auth.schema';
-import { handleLogin, handleRefreshToken, handleRegister, handleVerifyToken } from '@services/auth.services';
+import { handleLogin, handleRefreshToken, handleRegister, handleVerifyToken } from '@services/auth.service';
 import { CookieOptions, NextFunction, Request, Response, Router } from 'express';
-import { IAuthLogin, IAuthRegister } from 'interface/auth';
 
 const accessTokenCookieOptions: CookieOptions = {
   expires: new Date(Date.now() + config.accessTokenExpiresIn * 60 * 1000),

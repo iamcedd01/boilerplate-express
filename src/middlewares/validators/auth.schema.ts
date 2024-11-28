@@ -8,9 +8,9 @@ export const createUserSchema = [
     .bail()
     .isEmail()
     .custom(async (value: string) => {
-      await User.findOne({ email: value }).then((user) => {
+      await User.findOne({ email: value }).then(async (user) => {
         if (user) {
-          return Promise.reject('Email already exists');
+          return await Promise.reject('Email already exists');
         }
       });
     }),
