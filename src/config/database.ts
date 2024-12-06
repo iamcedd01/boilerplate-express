@@ -44,9 +44,8 @@ mongoose.connection.on('disconnected', () => {
 });
 
 // If the Node process ends, close the Mongoose connection
-process.on('SIGINT', () => {
-  mongoose.connection.close(() => {
-    logger.info('Mongoose default connection disconnected through app termination');
-    process.exit(0);
-  });
+process.on('SIGINT', async () => {
+  await mongoose.connection.close();
+  logger.info('Mongoose default connection disconnected through app termination');
+  process.exit(0);
 });

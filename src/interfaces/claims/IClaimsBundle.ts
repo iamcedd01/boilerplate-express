@@ -8,7 +8,7 @@ export enum EClaimsBundleStatus {
   Approved = 'Approved',
 }
 
-export interface ISoaDetail {
+export interface ISoaDetails {
   number: string;
   amount: number;
 }
@@ -17,15 +17,15 @@ export interface IClaimsBundle {
   bundleNumber: string;
   officeLocation?: string;
 
-  soaDetail?: ISoaDetail;
+  soaDetails?: ISoaDetails;
 
   encodedDate: string;
   dueDate: string;
   receivedDate: string;
   actualReceivedDate: string;
 
-  doctorDetail?: IDoctor;
-  facilityDetail: IFacility;
+  doctorDetails?: Pick<IDoctor, 'id' | 'profile'>;
+  facilityDetails: Pick<IFacility, 'id' | 'name'>;
 
   totalRcs: number;
   status: EClaimsBundleStatus;
